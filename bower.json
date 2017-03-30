@@ -1,9 +1,9 @@
 {
   "name": "ngFit",
   "version": "1.0.0",
-  "homepage": "https://github.com/Severenit/ngFit",
+  "homepage": "https://github.com/KiselevWebUI/ngFit.git",
   "authors": [
-    "Zar Zakharov"
+    "Andrey Kiselev"
   ],
   "description": "It is a simple application that runs gulp and helps in work.",
   "keywords": [
