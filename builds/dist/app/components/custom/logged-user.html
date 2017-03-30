@@ -1,0 +1,64 @@
+<div class="modal fade" id="logged-user-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="lu.resetPopup()">×</button>
+        <h2 class="modal-title">User: <b>{{lu.data.FullName}}</b></h2>
+      </div>
+      <div class="modal-body">
+        <table class="table table-bordered" style="margin: 0" ng-show="lu.data.isAnonymous">
+          <tr>
+            <td>
+              <label for="inputLoginAnonymous" class="col-md-2 control-label">Email:</label>
+            </td>
+            <td width="100%">
+              <input class="form-control" id="inputLoginAnonymous" placeholder="User email" type="text" ng-model="lu.anonymous.email"/>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <label for="inputPasswordAnonymous" class="col-md-2 control-label">Password:</label>
+            </td>
+            <td>
+              <input class="form-control" id="inputPasswordAnonymous" placeholder="User password" type="password" ng-model="lu.anonymous.password"/>
+            </td>
+          </tr>
+        </table>
+        <table class="table table-hover table-bordered" style="margin: 0" ng-hide="lu.data.isAnonymous">
+          <tr>
+            <td>displayName:</td>
+            <td>
+              <div ng-hide="lu.isEditDisplayName" ng-dblclick="lu.editDisplayName()" style="width: 100%; display: block; border-bottom: 1px solid transparent">{{lu.data.userName}}</div>
+              <input ng-show="lu.isEditDisplayName" class="form-control" ng-model="lu.data.userName" style="width: 100%;" ng-change="lu.isChanged = true"/>
+            </td>
+            <td width="50" align="center"><a href="javascript:void(0)" ng-click="lu.editDisplayName()">Edit</a></td>
+          </tr>
+          <tr>
+            <td>Email:</td>
+            <td>{{lu.data.email}}</td>
+            <td><a href="javascript:void(0)" ng-click="lu.senMailToVerified()">Verified</a></td>
+          </tr>
+          <tr>
+            <td>Photo:</td>
+            <td>
+              <div ng-show="!lu.data.userPhoto">---- Not uploaded ---</div>
+              <img ng-show="lu.data.userPhoto" src="{{lu.data.userPhoto}}" height="40"/>
+            </td>
+            <td align="center"><a href="javascript:void(0)" data-toggle="modal" data-target="#upload-modal" ng-click="lu.uploadPopup()" ng-hide="lu.data.isAnonymous">Upload</a></td>
+          </tr>
+          <tr ng-show="lu.needUpload">
+            <td colspan="3">
+              <custom-upload progress="lu.uploadProgress" filename="lu.fileName" handler="lu.uploadFileChange(files)"></custom-upload>
+            </td>
+          </tr>
+        </table>
+        <div ng-show="lu.save_error" class="alert alert-danger" style="margin: 5px 0 0 0">Error! {{lu.save_error.message}}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="lu.convertAnonymous()" ng-show="lu.data.isAnonymous" ng-disabled="!(lu.anonymous.email && lu.anonymous.password)">Convert to permanent account</button>
+        <button type="button" class="btn btn-primary" ng-click="lu.save()" ng-show="lu.isChanged">Save</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="lu.resetPopup()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

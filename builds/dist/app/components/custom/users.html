@@ -1,0 +1,75 @@
+<!--<p ng-show="vm.userViewType">View type: {{ vm.userViewType }}</p>-->
+<!--<p>User provider: {{ vm.userProvider }}</p>
+<p>DB url: {{ vm.dbUrl }}</p>-->
+<div class="row">
+  <div class="col-md-4 col-sm-12">
+    <pre style="max-height: 500px; overflow-y: auto;">{{vm.users | json}}</pre>
+  </div>
+  <div class="col-md-4 col-sm-6">
+    <div class="jumbotron ipp-block">
+      <span style="line-height: 28px;">Items per Page:</span>
+      <ul class="pagination pagination-sm">
+        <li ng-repeat="item in vm.itemsPerPageArray" ng-class="{'active': vm.itemsPerPage == item}" ng-click="vm.setItemsPerPage(item)"><a href="javascript:void(0)">{{item}}</a></li>
+      </ul>
+    </div>
+    <!--<custom-paginator data="vm.filtredUsers" current-page="vm.currentPage" items-per-page="vm.itemsPerPage" handler="vm.setCurrentPage(page)"></custom-paginator>-->
+    <table class="table table-hover table-bordered jumbotron" style="margin-bottom: 0;">
+      <thead>
+        <tr>
+          <!--<th width="10"></th>-->
+          <th class="header-sortable" width="40" ng-click="vm.sortByColumn('$id')">
+            <custom-arrows name="$id" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+            ID
+          </th>
+          <th class="header-sortable" ng-click="vm.sortByColumn('name')" width="100%">
+            <custom-arrows name="name" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+            Name
+          </th>
+          <th class="header-sortable" ng-click="vm.sortByColumn('age')">
+            <custom-arrows name="age" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+            Age
+          </th>
+          <th class="header-sortable" width="30">
+            <span class="glyphicon glyphicon-check" ng-click="vm.isCurrentUser = !vm.isCurrentUser; vm.getFiltredUsers();" ng-show="vm.isCurrentUser"></span>
+            <span class="glyphicon glyphicon-unchecked" ng-click="vm.isCurrentUser = !vm.isCurrentUser; vm.getFiltredUsers();" ng-hide="vm.isCurrentUser"></span>
+          </th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr ng-repeat="user in vm.filtredUsers | orderBy:vm.sortBy:vm.sortTo | offset:vm.currentPage*vm.itemsPerPage | limitTo:vm.itemsPerPage" ng-click="vm.setEdit(user)" ng-class="{'editable': vm.isEditable(user), 'user-self': vm.userSelf(user)}">
+          <!--<td>{{$index + 1}}</td>-->
+          <td>{{user.$id}}</td>
+          <td>{{user.name}}</td>
+          <td>{{user.age}}</td>
+          <td><!--{{user.age | anonim}}--><button class="close" ng-click="vm.deleteUser(user)" ng-show="vm.isEditable(user)">X</button></td>
+        </tr>
+      </tbody>
+    </table>
+    <custom-paginator data="vm.filtredUsers" current-page="vm.currentPage" items-per-page="vm.itemsPerPage" handler="vm.setCurrentPage(page)"></custom-paginator>
+    <h2 ng-show="vm.likeCurrentUsers.length">For current user only</h2>
+    <table class="table table-hover table-bordered jumbotron" style="margin-bottom: 0;">
+      <tbody>
+      <tr ng-repeat="user in vm.likeCurrentUsers">
+        <!--<td>{{$index + 1}}</td>-->
+        <td>{{user.$id}}</td>
+        <td>{{user.name}}</td>
+        <td>{{user.age}}</td>
+      </tr>
+      </tbody>
+    </table>
+  </div>
+  <div class="col-md-4 col-sm-6">
+    <button class="btn btn-primary" style="margin-top: 0;" ng-click="vm.openCloseUserForm(1, 1)" ng-show="vm.canCreateNew()">Create new User</button>
+    <form name="newUser" class="jumbotron" ng-show="vm.userForm">
+      <button class="close" ng-click="vm.openCloseUserForm(0, 1)">X</button>
+      <input type="text" ng-model="vm.user.name" class="form-control" placeholder="User name"/><br/>
+      <input type="number" ng-model="vm.user.age" class="form-control" placeholder="User age"/><br/>
+      <button class="btn btn-raised btn-success" ng-click="vm.addUser()" ng-hide="vm.user.$id" style="margin-bottom: 0"; ng-disabled="!vm.user.name">Add new User</button>
+      <button class="btn btn-raised btn-primary" ng-click="vm.openCloseUserForm(1, 1)" ng-hide="vm.user.$id" style="margin-bottom: 0";>Reset Form</button>
+      <button class="btn btn-raised btn-primary" ng-click="vm.updateUser()" ng-show="vm.user.$id && vm.editType" style="margin-bottom: 0">Save</button>
+      <button class="btn btn-raised btn-danger" ng-click="vm.deleteUser()" ng-show="vm.user.$id && vm.editType" style="margin-bottom: 0">Delete</button>
+    </form>
+    <h3 style="margin: 0">Current user</h3>
+    <pre style="max-height: 450px; overflow-y: auto;">{{currentUser | json}}</pre>
+  </div>
+</div>

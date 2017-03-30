@@ -1,0 +1,54 @@
+<div class="row">
+  <div class="col-md-4 col-sm-12">
+
+    <input type="text" ng-model="ttitle"/>
+    <div enter="ttitle" leave></div>
+    {{ ttitle }}
+    <br/>
+    <div example="btn-success" speed flight>This is superman</div>
+    <div example="btn-danger" strength>This is man</div>
+
+  </div>
+  <div class="col-md-4 col-sm-12">
+
+    <div>
+      <h3 style="margin:0">External binding param</h3>
+      <select select-custom external="ttitle">
+        <option value="">All</option>
+        <option value="1">1111111111</option>
+        <option value="2">2222222</option>
+        <option value="3" selected>333333333333333333333</option>
+        <option value="4">44444</option>
+        <option value="5">5555555</option>
+      </select>
+    </div>
+
+    <div>
+      <h3>External binding param</h3>
+      <select select-custom remove="true" external="ttitle">
+        <option value="">All</option>
+        <option value="1">1111111111</option>
+        <option value="2">2222222</option>
+        <option value="3">333333333333333333333</option>
+        <option value="4">44444</option>
+        <option value="5" selected>5555555</option>
+      </select>
+    </div>
+
+  </div>
+  <div class="col-md-4 col-sm-12">
+
+    <div>
+      <h3 style="margin:0">Onchange alert and remove field</h3>
+      <select select-custom remove="true" onchange="alert(this.value)">
+        <option value="">All</option>
+        <option value="1" selected>1111111111</option>
+        <option value="2">2222222</option>
+        <option value="3">333333333333333333333</option>
+        <option value="4">44444</option>
+        <option value="5">5555555</option>
+      </select>
+    </div>
+
+  </div>
+</div>

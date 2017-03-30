@@ -1,0 +1,53 @@
+<!doctype html>
+<html ng-app="ngFit">
+<!--<html>-->
+  <head lang="ru-RU">
+    <meta charset="UTF-8">
+    <title>This is Demo</title>
+    <meta name="viewport" content="width=device-width">
+    <link rel="stylesheet" href="css/style.min.css">
+  </head>
+  <body>
+    <div class="root">
+      <div class="root-line">
+        <div class="container">
+          <div ng-include="'app/components/navbar/navbar.html'"></div>
+        </div>
+      </div>
+      <div class="root-line" style="height: 100%">
+        <!--<div class="container page {{ pageClass }}" ng-view></div>-->
+        <div class="container" ng-view></div>
+      </div>
+      <div class="root-line">
+        <div class="container">
+          <div ng-include="'app/components/navbar/footerbar.html'"></div>
+        </div>
+      </div>
+    </div>
+    <!-- Others JS Files -->
+    <script src="libs/jquery/all.dist.concat.js"></script>
+    <!-- AngularJs vDependencies -->
+    <script src="libs/angular/angular.concat.js"></script>
+
+    <!-- Our JS App Fies -->
+    <script src="app/app.js"></script>
+    <script>
+      $(document).ready(function() {
+        setTimeout(function(){$.material.init()}, 1000);
+      });
+      /*(function(){
+        setTimeout(function(){
+          console.log('Start');
+          var $inj = angular.bootstrap(document, ['ngFit']);
+          var $rootScope = $inj.get('$rootScope');
+          console.log('Step 1');
+          $rootScope.$broadcast('init', 'hello');
+          //$rootScope.$apply();
+          //rootScope.$emit();
+
+          setTimeout(function(){$.material.init()}, 1000);
+        }, 5000);
+      })()*/
+    </script>
+  </body>
+</html>
