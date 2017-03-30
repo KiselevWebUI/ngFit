@@ -2,7 +2,7 @@
 .DS_Store
 .idea
 bower_components/
-builds/dist
+/builds/dist/
 node_modules/
 builds/development/libs/**/*
 builds/development/css/style.min.css
