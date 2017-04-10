@@ -14,7 +14,7 @@
     .config(Config)
     .run(Run)
 
-  Config.$inject = ['$routeProvider', '$locationProvider', '$logProvider'];
+  //Config.$inject = ['$routeProvider', '$locationProvider', '$logProvider'];
   /* @ngInject */
   function Config($routeProvider, $locationProvider, $logProvider){
     //console.log('Config');
@@ -22,12 +22,12 @@
       .otherwise({redirectTo: '/'});
 
     $locationProvider.html5Mode(false);
-    $logProvider.debugEnabled(true);
+    $logProvider.debugEnabled(false);
   }
 
   Run.$inject = ['fitfireService'];
   function Run(fitfireService){
-    //console.log('Run')
+    //console.log('Run');
   }
 
 })();

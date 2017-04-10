@@ -6,13 +6,12 @@
     .config(MainConfig)
     .controller('MainCtrl', MainCtrl)
 
-  MainCtrl.$inject = ['$scope', '$rootScope', 'FIREBASE_URL', '$log', 'fitfireService'];
-  function MainCtrl($scope, $rootScope, FIREBASE_URL, $log, fitfireService){
+  MainCtrl.$inject = ['$scope', '$rootScope', 'FIREBASE_URL', '$log', 'fitfireService', 'usersFactory'];
+  function MainCtrl($scope, $rootScope, FIREBASE_URL, $log, currentProvider, usersFactory){
     var vm = this;
     $rootScope.curPath = 'main';
     $rootScope.pageClass = 'page-main';
 
-    var currentProvider = fitfireService;
 
     vm.userProvider = '"fitfireService"';
 
@@ -25,65 +24,30 @@
 
     if($rootScope.needAuth) $('#sign-in-modal').modal('show');
 
-    vm.user = {
-      id: null,
-      name: null,
-      age: 0
+    vm.equalsCell = true;
+
+    vm.sortByColumn = function(name){
+      vm.sortBy = name;
+      vm.sortTo = !vm.sortTo;
+      //$scope.$apply();
     }
 
-    currentProvider.getUsers(function(data){
+    vm.sortTo = false;
+    vm.sortBy = '$id';
+
+    vm.users = usersFactory.users;
+
+    /*currentProvider.getUsers(function(data){
       vm.users = data;
     });
 
     currentProvider.getUsers().then(function(data){
       vm.users = data;
+      vm.sortTo = false;
+      vm.sortBy = '$id';
     }).catch(function(err){
       $log.debug(err);
-    });
-
-    vm.openCloseUserForm = function(key, reset){
-      if(reset) vm.defaultUser();
-      vm.userForm = key?true:false;
-    }
-
-    vm.defaultUser = function(name, age){
-      vm.user = {
-        id: null,
-        name: null,
-        age: 0
-      }
-    }
-
-    vm.addUser = function(){
-      currentProvider.addUser(vm.user).then(function(){
-        vm.openCloseUserForm(0, 1);
-      });
-    }
-
-    vm.updateUser = function(){
-      currentProvider.updateUser(vm.user).then(function(){
-        vm.openCloseUserForm(0, 1);
-      });
-    }
-
-    vm.deleteUser = function(user){
-      if(user) vm.user = user;
-      currentProvider.deleteUser(vm.user).then(function(){
-        vm.openCloseUserForm(0, 1);
-      });
-    }
-
-    vm.setEdit = function(user){
-      if($rootScope.currentUser.isAnonymous) return;
-      vm.user = user;
-      vm.openCloseUserForm(1);
-    }
-
-    vm.defaultUser();
-
-    $scope.clickFunction = function(name){
-      alert('Hi, ' + name);
-    }
+    });*/
 
   }
 
@@ -94,7 +58,13 @@
       .when('/', {
         templateUrl: '/app/main/main.html',
         controller: 'MainCtrl',
-        controllerAs: 'vm'
+        controllerAs: 'vm',
+        resolve: {
+          /* @ngInject */
+          usersFactory: function(fitfireFactory){
+            return fitfireFactory();
+          }
+        }
       });
 
   }

@@ -3,6 +3,44 @@
 
   var custom = angular.module('ngFit.custom', ['ngFit.auth.firebase']);
 
+  custom.directive('likeTable', ['$window', '$timeout', '$log', function($window, $timeout, $log){
+    return {
+      restrict: 'C',
+      controller: function($rootScope, $scope, $log){},
+      link: function(scope, element, attrs){
+
+        scope.$watch(attrs['update'], function(newVal) {
+          updateDate(scope, element, attrs);
+        });
+
+        function updateDate(scope, element, attrs){
+          $(element).find('.like-table-br').remove();
+          $(element).find('.like-table-td').remove();
+
+          $(element).find('> *').each(function(){
+            $(this).find('> *').each(function(){
+              $(this).addClass('like-table-row');
+              if($(this).hasClass('block-content')) $(this).addClass('like-table-row-content');
+            });
+            $(this)
+              .addClass('like-table-td-inner')
+              .wrap('<div class="like-table-td"></div>')
+              .parent().after('<div class="like-table-br"></div>');
+          });
+
+          scope.likeTableTimer = null;
+          angular.element($window).bind('resize', function(){
+            clearTimeout(scope.likeTableTimer);
+            scope.likeTableTimer = $timeout(function(){
+              if(element.parent().hasClass('like-table-wrap')) element.unwrap('<div class="like-table-wrap"></div>');
+              else element.wrap('<div class="like-table-wrap"></div>');
+            }, 10);
+          });
+        }
+      }
+    }
+  }]);
+
   //// .directive('customOnChange', customOnChange) //////
   custom.directive('customOnChange', customOnChange);
   function customOnChange(){
@@ -272,6 +310,41 @@
       })
     }
   });
+
+  custom.directive('autocompleteInput', ['$window', '$timeout', function($window, $timeout){
+    return{
+      restrict: 'E',
+      scope: {ngModel: '=', list: '=', inLineValue: '@', name: '@', controlClass: '@', style: '@', handler: '&'},
+      template: `<div style="position: relative; {{style}}">
+                  <input type="text" name="{{name}}" id="{{name}}" ng-model="ngModel" class="{{controlClass}}" style="width: 100%; position: relative; z-index: 11;" ng-keyup="keyUpEvent()"/>
+                  <div class="autocomplete-list" ng-show="list.length">
+                    <a ng-repeat="item in list" ng-click="setValue(item)" style="white-space: nowrap; display: block;">{{ item[inLineValue] }}</a>
+                  </div>
+                 </div>`,
+      controller: function($scope){
+        $scope.setValue = function(item){
+          $scope.ngModel = item[$scope.inLineValue];
+          $scope.closeAutocompleteList();
+        }
+        $scope.closeAutocompleteList = function(){
+          $scope.list = [];
+        }
+        $scope.keyUpEventTimer = null;
+        $scope.keyUpEvent = function(){
+          clearTimeout($scope.keyUpEventTimer);
+          $scope.keyUpEventTimer = $timeout(function(){
+            $scope.handler({str: $scope.ngModel, value: $scope.inLineValue});
+          }, 500);
+        }
+      },
+      link: function(scope, element){
+        angular.element($window).bind('click', function(e){
+          scope.closeAutocompleteList();
+          scope.$apply();
+        })
+      }
+    }
+  }])
 
   custom.directive('example', function(){
     return{

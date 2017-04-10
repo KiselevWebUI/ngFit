@@ -87,6 +87,39 @@ table.jumbotron{border-radius:4px !important; overflow: hidden;}
 .copy, .copy:hover{background: none !important; color: $grey;}
 .copy span{position: relative; top: 2px;}
 
+////////////////////////////////////////
+.autocomplete-list{
+  position: absolute;
+  border: 1px solid #808080;
+  background: #fff;
+  min-width: 200px;
+  max-height: 200px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  z-index: 10;
+  left: 50%;
+  transform: translateX(-50%);
+  box-shadow: 0 8px 17px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19);
+  cursor: default;
+}
+.autocomplete-list a{
+  display: block;
+  border-top: 1px solid #ccc;
+  color: $font-color-base;
+  text-decoration: none;
+  padding: 2px 5px 2px 5px;
+  white-space: nowrap;
+  max-width: 300px;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  cursor: default;
+}
+.autocomplete-list a:hover{
+  background: #3399ff;
+  color: $white;
+}
+///////////////////////////////////////
+
 
 ///////////////////////////////////////
 .infinity-scroll .container{

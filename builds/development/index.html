@@ -31,23 +31,12 @@
 
     <!-- Our JS App Fies -->
     <script src="app/app.js"></script>
-    <script>
-      $(document).ready(function() {
-        setTimeout(function(){$.material.init()}, 1000);
-      });
-      /*(function(){
-        setTimeout(function(){
-          console.log('Start');
-          var $inj = angular.bootstrap(document, ['ngFit']);
-          var $rootScope = $inj.get('$rootScope');
-          console.log('Step 1');
-          $rootScope.$broadcast('init', 'hello');
-          //$rootScope.$apply();
-          //rootScope.$emit();
-
-          setTimeout(function(){$.material.init()}, 1000);
-        }, 5000);
-      })()*/
-    </script>
+    <!--<script>
+      (function(){
+         setTimeout(function(){
+           angular.bootstrap(document, ['ngFit']);
+         }, 5000);
+       })()
+    </script>-->
   </body>
 </html>

@@ -1,7 +1,7 @@
 <h1>Main page - {{ vm.title }}</h1>
 <!--<div ng-include="'app/components/users/users.html'"></div>-->
 <!--<users-block view-type="Home Page" edit="1"></users-block>-->
-<div class="row">
+<!--<div class="row">
   <div class="col-md-4 col-sm-6">
     <h3 style="margin: 0">All users</h3>
     <pre style="max-height: 500px; overflow-y: auto;">{{vm.users | json}}</pre>
@@ -10,4 +10,53 @@
     <h3 style="margin: 0">Current user</h3>
     <pre style="max-height: 500px; overflow-y: auto;">{{currentUser | json}}</pre>
   </div>
+</div>-->
+
+<div class="panel panel-default like-table-header">
+  <div class="panel-body">
+    <h3>Like table view ({{ vm.users.length }})</h3>
+    <div>
+      <table width="100%">
+        <tr>
+          <td class="header-sortable" style="width: 100%;" align="right">
+            <div class="checkbox">
+              <label>
+                <input type="checkbox" ng-model="vm.equalsCell"/>
+                Equal cells
+              </label>
+            </div>
+
+          </td>
+          <td class="header-sortable" ng-click="vm.sortByColumn('$id')">
+            <label>
+              <custom-arrows name="$id" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+              ID
+            </label>
+          </td>
+          <td class="header-sortable" ng-click="vm.sortByColumn('name')">
+            <label>
+              <custom-arrows name="name" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+              Name
+            </label>
+
+          </td>
+          <td class="header-sortable" ng-click="vm.sortByColumn('age')">
+            <label>
+              <custom-arrows name="age" sort-by="vm.sortBy" sort-to="vm.sortTo"></custom-arrows>
+              Age
+            </label>
+          </td>
+        </tr>
+      </table>
+    </div>
+  </div>
 </div>
+
+<div class="like-table" ng-class="{'cell-eq': vm.equalsCell}" update="vm.sortBy + vm.sortTo">
+  <div ng-repeat="user in vm.users | orderBy:vm.sortBy:vm.sortTo" ng-mouseenter="user.over=1" ng-mouseleave="user.over=0" ng-class="{'block-over': user.over == 1}">
+    <div class="block-content"><h4 style="margin-top: 0">{{ user.name }}</h4></div>
+    <div>id:{{ user.$id }}, age: {{ user.age }}</div>
+  </div>
+</div>
+
+<div ng-include="'init.html'"></div>

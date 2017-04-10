@@ -97,6 +97,21 @@
 
     $rootScope.needAuth = false;
 
+    vm.autocompleteText = 'test';
+    vm.autocomleteList = [];
+
+    vm.getAutocomleteList = function(str, value){
+      vm.autocomleteList = [];
+      if(vm.autocompleteText.length > 0){
+        vm.users.map(function(item){
+          if(item[value].indexOf(vm.autocompleteText) > -1){
+            vm.autocomleteList.push(item);
+          }
+        });
+      }
+    }
+
+
     vm.sendSon = function(){
 
       var son1 = Son.go2Shop().then(
@@ -230,7 +245,76 @@
       }
     });
 
+    var ret_1 = function(){
+      var deferred = $q.defer();
+
+      setTimeout(function(){
+        var eggs = parseInt(Math.random()*10);
+        deferred.resolve('ret_1 = ' + eggs);
+      }, 300);
+      return deferred.promise;
+    }
+
+    var ret_2 = function(){
+      var deferred = $q.defer();
+
+      setTimeout(function(){
+        var eggs = parseInt(Math.random()*10);
+        deferred.resolve('ret_2 = ' + eggs);
+      }, 100);
+      return deferred.promise;
+    }
+
+    var ret_3 = function(){
+      var deferred = $q.defer();
+
+      setTimeout(function(){
+        var eggs = parseInt(Math.random()*10);
+        deferred.resolve('ret_3 = ' + eggs);
+      }, 200);
+      return deferred.promise;
+    }
+
+    var ret_4 = function(){
+      var deferred = $q.defer();
+
+      setTimeout(function(){
+        var eggs = parseInt(Math.random()*10);
+        deferred.resolve('ret_4 = ' + eggs);
+      }, 500);
+      return deferred.promise;
+    }
+
+    var ret_5 = function(){
+      var deferred = $q.defer();
+
+      setTimeout(function(){
+        var eggs = parseInt(Math.random()*10);
+        deferred.resolve('ret_5 = ' + eggs);
+      }, 1000);
+      return deferred.promise;
+    }
+
+    var arr = [ret_1, ret_2, ret_3, ret_4, ret_5];
+
+    function giveMeName() {
+      var results = [];
+      return arr.reduce(function (res, item) {
+        $log.debug(res, item);
+        return res ? res.then(function (res) {
+          results.push(res);
+          return item();
+        }) : item();
+      }, null).then(function (res) {
+        results.push(res);
+        return results;
+      });
+    }
+
+    $log.debug('giveMeName()', giveMeName());
+
   }
+
 
   TestsConfig.$inject = ['$routeProvider'];
   function TestsConfig($routeProvider){

@@ -4,16 +4,18 @@
   <div class="col-md-4 col-sm-12">
     <!--<div>
       <button class="btn btn-info" ng-click="vm.sendSon()">Send son to shop</button>
-    </div>-->
-    <!--<br/>
+    </div>
+    <br/>
     <div example="btn-success" speed flight>This is superman</div>
     <div example="btn-danger" strength>This is man</div>-->
     <div class="infinity-scroll">
       <div class="container" affix start-class="affix-start" stop-class="affix-stop">
         <div class="affix-block col-md-4 col-sm-12">
           <div style="float: right; margin-top: 3px;">
-            Non stop load
-            <input type="checkbox" ng-model="vm.userMoreLoadNonStop"/>
+            <label>
+              Non stop load
+              <input type="checkbox" ng-model="vm.userMoreLoadNonStop"/>
+            </label>
           </div>
           <h3 style="margin-top: 0;">Infinity scroll <span>({{ vm.usersList.length }})</span></h3>
           <div style="margin-bottom: 5px;">
@@ -49,6 +51,11 @@
       {{ ttitle }}
     </div>-->
     <div ng-class="{'joined-block': vm.combo_pre == 'exampleForm'}">
+      <div ng-class="{'joined-block': vm.combo_pre == 'autocomplete_1'}">
+        <div>autocomplete_1</div>
+        <input type="radio" ng-model="vm.combo_pre" value="autocomplete_1" style="float: right; margin-left: 5px;"/>
+        <autocomplete-input name="autocomplete_1" ng-model="vm.autocompleteText" list="vm.autocomleteList" handler="vm.getAutocomleteList(str, value)" in-line-value="name" control-class="" style="width: 200px;"></autocomplete-input>
+      </div>
       <div ng-class="{'joined-block': vm.combo_pre == 'combo_1'}">
         <div>combo_1</div>
         <input type="radio" ng-model="vm.combo_pre" value="combo_1" style="float: right; margin-left: 5px;"/>
@@ -93,6 +100,10 @@
 
   </div>
   <div class="col-md-4 col-sm-12">
+    <div ng-show="vm.combo_pre == 'autocomplete_1'">
+      <div>autocomplete_1</div>
+      <pre style="max-height: 400px; overflow-y: auto;">{{ exampleForm.autocomplete_1 | json }}</pre>
+    </div>
     <div ng-show="vm.combo_pre == 'combo_1'">
       <div>combo_1</div>
       <pre style="max-height: 400px; overflow-y: auto;">{{ exampleForm.combo_1 | json }}</pre>
@@ -116,3 +127,5 @@
   </div>
   </form>
 </div>
+
+<div ng-include="'init.html'"></div>

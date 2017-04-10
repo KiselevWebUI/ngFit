@@ -16,7 +16,9 @@ $screen-xs-max:              ($screen-sm - 1) !default;
 $screen-sm-max:              ($screen-md - 1) !default;
 $screen-md-max:              ($screen-lg - 1) !default;
 // === === === === === === === === === === === === === === === === //
+
 $font-size-base: 16px;
+$base-cellspacing: 10px;
 
 // Material colors palette
 $font-color-base: #333 !default;

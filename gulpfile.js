@@ -19,7 +19,7 @@ gulp.task('js', function(cb){
     gulp.src(['builds/development/app/**/*.js', '!builds/development/app/**/*_test.js'])
       ,concat('app.js')
       ,ngAnnotate()
-      //,uglify()
+      ,uglify()
       ,gulp.dest('builds/dist/app/')
   ],cb);
 
