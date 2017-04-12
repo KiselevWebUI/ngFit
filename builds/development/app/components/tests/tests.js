@@ -104,7 +104,7 @@
       vm.autocomleteList = [];
       if(vm.autocompleteText.length > 0){
         vm.users.map(function(item){
-          if(item[value].indexOf(vm.autocompleteText) > -1){
+          if(item[value].toLowerCase().indexOf(vm.autocompleteText.toLowerCase()) > -1){
             vm.autocomleteList.push(item);
           }
         });

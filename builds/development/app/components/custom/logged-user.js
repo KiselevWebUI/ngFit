@@ -65,19 +65,19 @@
     vm.convertAnonymous = function(){
       Auth.convertAnonymous(vm.anonymous.email, vm.anonymous.password, function(user, error){
         if(user){
-          console.log("vm.convertAnonymous Anonymous account successfully upgraded", user);
-          addUser(null, 0, user.uid, 'Anonymous User');
+          $log.debug("vm.convertAnonymous Anonymous account successfully upgraded", user);
+          addUser(null, 0, user.uid, 'Anonymous User', true);
           $('#logged-user-modal').modal('hide');
         }
         if(error){
-          console.log("vm.convertAnonymous Error upgrading anonymous account", error);
+          $log.debug("vm.convertAnonymous Error upgrading anonymous account", error);
           vm.save_error = error;
         }
       });
     }
 
-    function addUser(name, age, uid, anonim){
-      fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null'}, anonim, function(name){
+    function addUser(name, age, uid, anonim, logedKey){
+      fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null', msg: 0, logedNow: logedKey}, anonim, function(name){
         if(name){
           Auth.updateProfile(name, null, function(user, error){
             if(user){
@@ -117,21 +117,22 @@
     function getUsersFromUID(uid, displayName, photoURL){
       fitfireService.getUsers().then(function(data){
         vm.allUsers = data;
-        $log.debug('logged-user.js');
-        $log.debug(vm.allUsers.length);
+        //$log.debug('logged-user.js');
+        //$log.debug(vm.allUsers.length);
         var curr = null;
         for(var i = 0; i < vm.allUsers.length; i++){
           var user = vm.allUsers[i];
-          $log.debug(vm.allUsers[i]);
-          $log.debug(vm.allUsers[i].uid + ' === ' + uid + '    ' + (vm.allUsers[i].uid === uid));
+          //$log.debug(vm.allUsers[i]);
+          //$log.debug(vm.allUsers[i].uid + ' === ' + uid + '    ' + (vm.allUsers[i].uid === uid));
           if(vm.allUsers[i].uid === uid){
             vm.allUsers[i].name = displayName;
             curr = vm.allUsers[i];
             break;
           }
         }
-        $log.debug(curr);
+        //$log.debug(curr);
         if(curr){
+          curr.logedNow = true;
           fitfireService.updateUser(curr).then(function(user){
             $log.debug(user);
           });

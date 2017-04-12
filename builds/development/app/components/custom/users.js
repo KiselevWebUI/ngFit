@@ -16,7 +16,20 @@
   .filter('anonim', anonimFilter)
   .filter('withBalance', withBalanceFilter)
   .filter('forCurrentUser', forCurrentUserFilter)
+  .filter('loggedtUser', loggedtUserFilter)
   .filter('offset', offsetFilter)
+
+  function loggedtUserFilter(){
+    return function(input, $rootScope) {
+      var array = [];
+      if(input){
+        input.forEach(function(item){
+          if(item.logedNow) array.push(item);
+        })
+        return array;
+      }
+    };
+  }
 
   function forCurrentUserFilter(){
     return function(input, $rootScope) {
@@ -41,7 +54,7 @@
 
   function withBalanceFilter(){
     return function(array, min, max){
-      console.log(min, max);
+      //console.log(min, max);
       return array;
     };
   }
@@ -53,8 +66,8 @@
     }
   }
 
-  usersListCtrl.$inject = ['$rootScope', '$scope', '$element', '$log', 'fitfireService', 'firebaseConfig', '$filter'];
-  function usersListCtrl($rootScope, $scope, $element, $log, currentProvider, firebaseConfig, $filter){
+  usersListCtrl.$inject = ['$rootScope', '$scope', '$element', '$log', 'fitfireService', 'firebaseConfig', '$filter', '$timeout'];
+  function usersListCtrl($rootScope, $scope, $element, $log, currentProvider, firebaseConfig, $filter, $timeout){
     var vm = this;
 
     vm.userProvider = '"fitfireService"';
@@ -71,6 +84,7 @@
 
     vm.user = {};
     vm.users = null;
+    vm.logedUsers = null;
     vm.filtredUsers = null;
     vm.likeCurrentUsers = null;
 
@@ -114,6 +128,10 @@
       }
       $log.debug(vm.allPages)
     });*/
+
+    vm.getLogedUsers = function(){
+      vm.logedUsers = $filter('loggedtUser')(vm.users);
+    }
 
     vm.setItemsPerPage = function(item){
       vm.itemsPerPage = item;
@@ -163,13 +181,19 @@
     $scope.$watch('vm.users', function(newVal) {
       if(newVal){
         vm.getFiltredUsers();
+        vm.likeCurrentUsers = $filter('forCurrentUser')(vm.users, $rootScope);
+        vm.getLogedUsers();
       }
       $log.debug('vm.users', newVal);
     });
 
+    $scope.$on('ListObjectChanged', function() {
+      //console.log('users.js ListObjectChanged: getLogedUsers()');
+      vm.getLogedUsers();
+    });
+
     $rootScope.$watch('currentUser', function(newVal) {
       vm.getFiltredUsers();
-      vm.likeCurrentUsers = $filter('forCurrentUser')(vm.users, $rootScope);
       $log.debug('$rootScope.currentUser', newVal);
     });
 
@@ -193,7 +217,9 @@
         name: null,
         age: 0,
         uid: 'null',
-        owner: 'null'
+        owner: 'null',
+        msg: 0,
+        logedNow: false
       }
     }
 

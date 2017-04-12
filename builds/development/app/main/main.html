@@ -52,8 +52,8 @@
   </div>
 </div>
 
-<div class="like-table" ng-class="{'cell-eq': vm.equalsCell}" update="vm.sortBy + vm.sortTo">
-  <div ng-repeat="user in vm.users | orderBy:vm.sortBy:vm.sortTo" ng-mouseenter="user.over=1" ng-mouseleave="user.over=0" ng-class="{'block-over': user.over == 1}">
+<div class="like-table" ng-class="{'cell-eq': vm.equalsCell}" update="vm.sortBy + vm.sortTo + vm.update">
+  <div ng-repeat="user in vm.users | orderBy:vm.sortBy:vm.sortTo" ng-mouseenter="user.over=1" ng-mouseleave="user.over=0" ng-class="{'block-over': user.over == 1, 'logedNow': user.logedNow}">
     <div class="block-content"><h4 style="margin-top: 0">{{ user.name }}</h4></div>
     <div>id:{{ user.$id }}, age: {{ user.age }}</div>
   </div>

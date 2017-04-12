@@ -4,8 +4,8 @@
   angular.module('ngFit.auth.firebase', ['firebase'])
     .factory('Auth', AuthenticationFactory)
 
-  AuthenticationFactory.$inject = ['$rootScope', 'firebaseConfig', '$log', '$cookies', '$q', '$location'];
-  function AuthenticationFactory($rootScope, firebaseConfig, $log, $cookies, $q, $location){
+  AuthenticationFactory.$inject = ['$rootScope', 'firebaseConfig', '$log', '$cookies', '$q', '$location', '$timeout'];
+  function AuthenticationFactory($rootScope, firebaseConfig, $log, $cookies, $q, $location, $timeout){
 
     if(!firebase.isInit){
       firebase.initializeApp(firebaseConfig);
@@ -103,6 +103,13 @@
         });
     };
 
+    auth.alreadyLoged = function(user, cb){
+      $cookies.put('alreadyLoged', user.uid);
+      $timeout(function(){
+        auth.logout(cb);
+      }, 5000);
+    }
+
     auth.logout = function(cb){
       return firebase.auth().signOut()
         .then(function(data) {
@@ -123,14 +130,16 @@
       }else{
         $rootScope.currentUser = null;
         $cookies.remove('uid');
+        $cookies.remove('alreadyLoged');
       }
     }
 
     auth.getUserName = function(){
-      if(!$cookies.get('uid'))
+      if(!$cookies.get('uid')){
         return null;
-      else
+      }else{
         return $cookies.get('uid');
+      }
     }
 
     auth.signedIn = function(){

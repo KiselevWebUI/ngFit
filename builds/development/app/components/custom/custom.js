@@ -3,29 +3,41 @@
 
   var custom = angular.module('ngFit.custom', ['ngFit.auth.firebase']);
 
-  custom.directive('likeTable', ['$window', '$timeout', '$log', function($window, $timeout, $log){
+  custom.directive('likeTable', ['$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log){
     return {
       restrict: 'C',
       controller: function($rootScope, $scope, $log){},
       link: function(scope, element, attrs){
 
+        /*var updateDateTimer = null;
+        scope.$on('ListObjectChanged', function(){
+          console.log('custom.js likeTable ListObjectChanged: getLogedUsers()');
+          clearTimeout(updateDateTimer);
+          updateDateTimer = setTimeout(function(){
+            //updateDate(scope, element, attrs);
+          }, 100);
+        });*/
+
         scope.$watch(attrs['update'], function(newVal) {
-          updateDate(scope, element, attrs);
+            //clearTimeout(updateDateTimer);
+            updateDate(scope, element, attrs);
         });
 
         function updateDate(scope, element, attrs){
           $(element).find('.like-table-br').remove();
           $(element).find('.like-table-td').remove();
+          $(element).find('.like-table-td-inner').removeClass('like-table-td-inner');
 
-          $(element).find('> *').each(function(){
-            $(this).find('> *').each(function(){
-              $(this).addClass('like-table-row');
-              if($(this).hasClass('block-content')) $(this).addClass('like-table-row-content');
+          $(element).find('> *').each(function(index){
+            var $$ = $(this);
+            $$.find('> *').each(function(){
+              var $$$ = $(this);
+              $$$.addClass('like-table-row');
+              if($$$.hasClass('block-content')) $$$.addClass('like-table-row-content');
             });
-            $(this)
-              .addClass('like-table-td-inner')
-              .wrap('<div class="like-table-td"></div>')
-              .parent().after('<div class="like-table-br"></div>');
+            $$.addClass('like-table-td-inner');
+            $$.wrap('<div class="like-table-td"></div>');
+            $$.parent().after('<div class="like-table-br"></div>');
           });
 
           scope.likeTableTimer = null;
@@ -210,12 +222,12 @@
       restrict: 'E',
       scope: {name: '@', sortBy: '=sortBy', sortTo: '=sortTo'},
       controller: function(){},
-      controllerAs: 'custArrCtrl',
-      bindToController: true,
+      /*controllerAs: 'custArrCtrl',
+      bindToController: true,*/
       template:/* @ngInject */
-        `<span ng-show="custArrCtrl.sortBy==custArrCtrl.name && !custArrCtrl.sortTo" class="glyphicon glyphicon-sort-by-attributes red" aria-hidden="true"></span>
-         <span ng-show="custArrCtrl.sortBy==custArrCtrl.name && custArrCtrl.sortTo" class="glyphicon glyphicon-sort-by-attributes-alt red" aria-hidden="true"></span>
-         <span ng-show="custArrCtrl.sortBy!=custArrCtrl.name" class="glyphicon glyphicon-sort" aria-hidden="true"></span>`
+        `<span ng-show="sortBy==name && !sortTo" class="glyphicon glyphicon-sort-by-attributes red" aria-hidden="true"></span>
+         <span ng-show="sortBy==name && sortTo" class="glyphicon glyphicon-sort-by-attributes-alt red" aria-hidden="true"></span>
+         <span ng-show="sortBy!=name" class="glyphicon glyphicon-sort" aria-hidden="true"></span>`
     }
   }
   ////// .directive('customArrows', customArrows); ////////

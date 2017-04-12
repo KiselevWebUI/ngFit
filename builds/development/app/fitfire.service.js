@@ -90,15 +90,43 @@
         name: _user.name,
         age: _user.age,
         uid: _user.uid,
-        owner:_user.owner
+        owner:_user.owner,
+        msg: _user.msg,
+        logedNow: _user.logedNow
       });
       return $firebaseArray(user).$loaded();
+    }
+
+    this.setLogedNowUser = function(uid, logedKey, cb){
+      this.getUsers().then(function(data){
+        var curr = null;
+        var logedNow = false;
+        for(var i = 0; i < data.length; i++){
+          if(data[i].uid === uid){
+            curr = data[i];
+            logedNow = data[i].logedNow;
+            break;
+          }
+        }
+        if(curr){
+          if(logedNow != logedKey){
+            curr.logedNow = logedKey;
+            self.updateUser(curr).then(function(){
+              if(cb) cb(curr);
+            });
+          }else if(cb) cb(curr, true);
+        }
+      })
     }
 
     this.deleteUser = function(_user){
       var user = db.ref('users/' + _user.$id);
       user.remove();
       return $firebaseArray(user).$loaded();
+    }
+
+    this.addWatchToUsersListObject = function(){
+      return $firebaseObject(db.ref('users'));
     }
 
     this.getUsers = function(){

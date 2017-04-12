@@ -40,6 +40,13 @@
       return $firebaseArray(user).$loaded();
     }
 
+    function setLogedNowUser(_user, key){
+      var user = dataBase.ref('users/' + _user.$id);
+      user.set({
+        logedNow: key?true:false
+      });
+    }
+
     function getUsers(cb){
       var users = $firebaseArray(dataBase.ref('users'));
       return users.$loaded(cb);
@@ -51,7 +58,8 @@
           users: data,
           addUser: addUser,
           updateUser: updateUser,
-          deleteUser: deleteUser
+          deleteUser: deleteUser,
+          setLogedNowUser: setLogedNowUser
         };
       });
     }

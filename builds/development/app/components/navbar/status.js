@@ -2,10 +2,13 @@
   'use strict';
 
   angular.module('ngFit.status', ['ngRoute', 'ngFit.logged-user', 'ngFit.auth.firebase', 'ngFit.fitfire.service'])
+    .constant('statusMsg', {
+      alreadyLoged: 'This user has already logged in from another location'
+    })
     .controller('AuthCtrl', AuthController);
 
-  AuthController.$inject = ['$rootScope', '$scope', '$log', 'Auth', 'fitfireService', '$location'];
-  function AuthController($rootScope, $scope, $log, Auth, fitfireService, $location){
+  AuthController.$inject = ['$rootScope', '$scope', '$log', 'Auth', 'fitfireService', '$location', 'statusMsg'];
+  function AuthController($rootScope, $scope, $log, Auth, fitfireService, $location, statusMsg){
     var vm = this;
 
     vm.credential = null;
@@ -72,7 +75,9 @@
           $log.debug('status.js vm.signInAnonymously = '+ user);
         }else if(error){
           $log.debug(error);
-          //$scope.$apply();
+          $scope.$apply(function(){
+            vm.error = error.message;
+          });
         }
       });
     }
@@ -82,15 +87,27 @@
       Auth.login(vm.credential.email, vm.credential.password, function(user, error){
         vm.updateUserData(user);
         if(user){
-          $log.debug('status.js vm.loginExist = ' + user);
-          vm.init();
-          vm.resetLoginForm();
-          $scope.$apply();
+          fitfireService.setLogedNowUser(user.uid, true, function(user, alreadyLoged){
+            if(alreadyLoged){
+              vm.error = statusMsg.alreadyLoged;
+              Auth.alreadyLoged(user, function(){
+                vm.updateUserData(null);
+                vm.resetLoginForm();
+                $scope.$apply();
+              });
+            }else{
+              $log.debug('status.js vm.loginExist = ' + user);
+              vm.init();
+              vm.resetLoginForm();
+              //$scope.$apply();
+            }
+          })
         }
         if(error){
           $log.debug(error);
-          vm.error = error.message;
-          //$scope.$apply();
+          $scope.$apply(function(){
+            vm.error = error.message;
+          });
         }
       }).then(function(){});
     }
@@ -122,7 +139,9 @@
                     addUser(_name, _age, _uid);
                   }else if(error){
                     $log.debug('vm.createNewUser updateProfile erorr');
-                    vm.error = error;
+                    $scope.$apply(function(){
+                      vm.error = error.message;
+                    });
                   }
                 });
               }, function(error){ //error
@@ -133,8 +152,9 @@
           }
         }else if(error){
           $log.debug(error);
-          vm.error = error.message;
-          $scope.$apply();
+          $scope.$apply(function(){
+            vm.error = error.message;
+          });
         }
       }).then(function(){});
     }
@@ -147,7 +167,7 @@
       //$log.debug('Step 4');
       //$log.debug('addUser(); name=' + name + '; age=' + age + '; uid=' + uid);
       if(anonim){
-        fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null'}, anonim, function(name){
+        fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null', msg: 0, logedNow: true}, anonim, function(name){
           if(name){
             Auth.updateProfile(name, null, function(user, error){
               if(user){
@@ -158,26 +178,31 @@
                 $scope.$apply();
                 $log.debug(user);
               }else if(error){
-                vm.error = error;
+                $scope.$apply(function(){
+                  vm.error = error.message;
+                });
               }
             });
           }
         });
       }else{
-        fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null'}, null, function(user){
+        fitfireService.addUser({id: null, name: name, age: age, uid: uid, owner: 'null', msg: 0, logedNow: true}, null, function(user){
           vm.init();
           vm.resetLoginForm();
-          $scope.$apply();
+          //$scope.$apply();
         });
       }
 
       //$log.debug('status.js vm.createNewUser = ' + user);
       //vm.updateUserData();
-      //$scope.$apply();
+      $scope.$apply();
     }
 
     vm.logout = function(){
+      var uid = $rootScope.currentUser.uid;
       Auth.logout(function(user, error){
+        //console.log('user = ' + user + '\nuid = ' + uid);
+        fitfireService.setLogedNowUser(uid, false);
         vm.updateUserData(user);
         if($rootScope.curPath !== 'home'){
           $location.path('/#');

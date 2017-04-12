@@ -25,9 +25,12 @@
     $logProvider.debugEnabled(false);
   }
 
-  Run.$inject = ['fitfireService'];
-  function Run(fitfireService){
+  Run.$inject = ['fitfireService', '$rootScope'];
+  function Run(fitfireService, $rootScope){
     //console.log('Run');
+    fitfireService.addWatchToUsersListObject().$watch(function(){
+      $rootScope.$broadcast('ListObjectChanged');
+    });
   }
 
 })();

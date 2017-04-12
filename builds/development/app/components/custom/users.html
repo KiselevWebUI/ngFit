@@ -3,6 +3,26 @@
 <p>DB url: {{ vm.dbUrl }}</p>-->
 <div class="row">
   <div class="col-md-4 col-sm-12">
+    <h4 style="margin-top: 0;">Logged now users: {{ vm.logedUsers.length }}</h4>
+    <!--<pre style="max-height: 200px; overflow-y: auto;">{{vm.logedUsers | json}}</pre>-->
+    <table class="table table-hover table-striped jumbotron">
+      <!--<thead>
+        <tr>
+          <th class="header-sortable" width="10"></th>
+          <th class="header-sortable" width="100%">
+            Logged now users
+          </th>
+        </tr>
+      </thead>-->
+      <tbody>
+        <tr ng-repeat="user in vm.logedUsers">
+          <td width="10">{{user.$id}}</td>
+          <td>{{user.name}}</td>
+          <td width="10"><a class="badge" style="width:100%; padding: 5px 7px;" ng-show="user.msg > 0">{{user.msg}}</a></td>
+        </tr>
+      </tbody>
+    </table>
+    <h4>All users: {{ vm.users.length }}</h4>
     <pre style="max-height: 500px; overflow-y: auto;">{{vm.users | json}}</pre>
   </div>
   <div class="col-md-4 col-sm-6">
@@ -46,8 +66,8 @@
       </tbody>
     </table>
     <custom-paginator data="vm.filtredUsers" current-page="vm.currentPage" items-per-page="vm.itemsPerPage" handler="vm.setCurrentPage(page)"></custom-paginator>
-    <h2 ng-show="vm.likeCurrentUsers.length">For current user only</h2>
-    <table class="table table-hover table-bordered jumbotron" style="margin-bottom: 0;">
+    <h3 ng-show="vm.likeCurrentUsers.length">For current user only</h3>
+    <table class="table table-hover table-striped jumbotron" style="margin-bottom: 0;">
       <tbody>
       <tr ng-repeat="user in vm.likeCurrentUsers">
         <!--<td>{{$index + 1}}</td>-->
