@@ -1,0 +1,52 @@
+<h4 style="margin-top: 0;">Chat wit logged now users: {{ vm.logedUsers.length }}</h4>
+<!--<pre style="max-height: 200px; overflow-y: auto;">{{vm.logedUsers | json}}</pre>-->
+<table class="table table-hover table-striped jumbotron">
+  <!--<thead>
+    <tr>
+      <th class="header-sortable" width="10"></th>
+      <th class="header-sortable" width="100%">
+        Logged now users
+      </th>
+    </tr>
+  </thead>-->
+  <tbody>
+  <tr ng-repeat="user in vm.logedUsers" ng-class="{'user-self': vm.userSelf(user)}">
+    <td width="10">{{user.$id}}</td>
+    <td>{{user.name}}</td>
+    <td width="10" align="right" style="white-space: nowrap;">
+      <a class="badge" style="padding: 5px 7px; margin-left: 2px;" href="javascript:void(0)" ng-repeat="line in user.msg" ng-show="currentUser.$id == line.to && line.count != 0" data-toggle="modal" data-target="#chat-modal" ng-click="vm.setCurrentChat(user)">
+        {{line.count }}
+      </a>
+
+      <a class="badge" style="padding: 5px 7px;" ng-show="vm.notMsg(user) && !vm.userSelf(user)" data-toggle="modal" data-target="#chat-modal" href="javascript:void(0)" ng-click="vm.setCurrentChat(user)">Chat</a>
+    </td>
+  </tr>
+  </tbody>
+</table>
+
+<div class="modal fade" id="chat-modal">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true" ng-click="vm.resetChatPopup()">×</button>
+        <h2 class="modal-title" style="width: 540px; display: block; white-space: nowrap; overflow: hidden; text-overflow: ellipsis;">To: {{ vm.currentChatUser.name }}</b></h2>
+      </div>
+      <div class="modal-body">
+        <div class="chat-block">
+          <!--<div class="chat-users">1</div>-->
+          <div class="chat-body" id="chat-body-container">
+            <div class="chat-message" ng-class="{'chat-message-self': message.from == currentUser.$id}" ng-repeat="message in vm.currentChatMessages">{{ message.text }}</div>
+          </div>
+        </div>
+        <div class="chat-block">
+          <textarea class="chat-msg" ng-model="vm.chatMessage.text"></textarea>
+        </div>
+        <div ng-show="vm.save_error" class="alert alert-danger" style="margin: 5px 0 0 0">Error! {{vm.save_error.message}}</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" ng-click="vm.sendMessage()" ng-disabled="!vm.chatMessage.text.length">Send</button>
+        <button type="button" class="btn btn-default" data-dismiss="modal" ng-click="vm.resetChatPopup()">Close</button>
+      </div>
+    </div>
+  </div>
+</div>
