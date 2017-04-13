@@ -21,11 +21,6 @@
 
     vm.users = currentProvider.users;
 
-    $scope.$on('init', function(event, data){
-      vm.title = 'Новый титл' + data;
-      console.log('contact init event', event, data);
-    });
-
   }
 
   ContactConfig.$inject = ['$routeProvider'];

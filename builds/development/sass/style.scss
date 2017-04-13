@@ -87,6 +87,48 @@ table.jumbotron{border-radius:4px !important; overflow: hidden;}
 .copy, .copy:hover{background: none !important; color: $grey;}
 .copy span{position: relative; top: 2px;}
 
+/////////////////////////////////////////
+a.badge{outline: none; font-weight: normal; background: #009688;}
+.user-self .badge, .user-self .badge:visited, .user-self .badge:active, .user-self .badge:hover {
+  background-color: $white;
+  color: $font-color-base !important;
+}
+.chat-block{display: table; width: 100%; margin-bottom: 5px;}
+.chat-block .chat-users{display: table-cell; width: 0px;}
+.chat-block .chat-body{border: 2px solid $grey; height: 300px; overflow-y: scroll; overflow-x: hidden; position: relative;}
+.chat-block .chat-msg{width: 100%; height: 100px; resize: none; font-size: 13px;}
+.chat-message{
+  border: 1px solid $bluegrey;
+  padding: 5px 10px 5px 10px;
+  display: block;
+  border-radius: 5px;
+  background: #f0f4f8;
+  margin: 10px 50px 10px 20px;
+  font-size: 13px;
+  white-space: pre-wrap;
+  position: relative;
+}
+.chat-message i{
+  position: absolute;
+  left: -8px;
+  top: 5px;
+  display: block;
+  width: 15px;
+  height: 15px;
+  border: 1px solid $bluegrey;
+  border-radius: 15px;
+  background: #fff;
+}
+.chat-message-self{
+  background: #c7edfc;
+  margin: 10px 20px 10px 50px;
+}
+.chat-message-self i{
+  right: -8px;
+  left: auto;
+}
+////////////////////////////////////////
+
 ////////////////////////////////////////
 .autocomplete-list{
   position: absolute;

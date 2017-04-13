@@ -5,7 +5,7 @@
     .module('ngFit.fitfire.factory', ['firebase'])
     .factory('fitfireFactory', fitfireFactory);
 
-  fitfireFactory.$inject = ['$log','firebaseConfig', '$firebaseObject', '$firebaseArray'];
+  fitfireFactory.$inject = ['$log', 'firebaseConfig', '$firebaseObject', '$firebaseArray'];
   function fitfireFactory($log, firebaseConfig, $firebaseObject, $firebaseArray){
 
     if(!firebase.isInit){

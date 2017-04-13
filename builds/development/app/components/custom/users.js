@@ -1,7 +1,7 @@
 ;(function(){
   'use strict';
 
-  angular.module('ngFit.users', ['ngFit.fitfire.service'])
+  angular.module('ngFit.users', ['ngFit.fitfire.service', 'ngFit.chat'])
     .directive('usersBlock', function(){
       return {
         restrict: 'E',
