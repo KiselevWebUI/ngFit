@@ -35,7 +35,7 @@
         <div class="chat-block">
           <!--<div class="chat-users">1</div>-->
           <div class="chat-body" id="chat-body-container">
-            <div class="chat-message" ng-class="{'chat-message-self': message.from == currentUser.$id}" ng-repeat="message in vm.currentChatMessages">{{ message.text }}</div>
+            <div id="chat-message-{{message.$id}}" class="chat-message" ng-class="{'chat-message-self': message.from == currentUser.$id}" ng-repeat="message in vm.currentChatMessages">{{ message.text }}</div>
           </div>
         </div>
         <div class="chat-block">

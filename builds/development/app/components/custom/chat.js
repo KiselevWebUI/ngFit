@@ -160,6 +160,7 @@
 
     function scrollToBottom(){
       setTimeout(function(){$('#chat-body-container').animate({scrollTop: 100000}, 1000);}, 100);
+      //alert('scrollToBottom')
     }
 
     chatService.addWatchToLastUpdatedMessageObject().$watch(function(data){
@@ -169,9 +170,10 @@
     $scope.$on('ListMessageChanged', function() {
       //console.log('$on ListMessageChanged:', vm.lastUpdatedMessage);
       if(vm.currentChat && vm.currentChatMessages){
+        var id = vm.lastUpdatedMessage.id;
         var from = vm.lastUpdatedMessage.from;
         var to = vm.lastUpdatedMessage.to;
-        //console.log('from', from, 'to', to);
+        //console.log('id', id, 'from', from, 'to', to);
         $('#chat-body-container').find('.chat-message').removeClass('lastMessage');
         if(to == $rootScope.currentUser.$id){
           chatService.resetUnreadedMessages(from, $rootScope.currentUser.$id, function(){
@@ -181,12 +183,22 @@
               setTimeout(function(){
                 $('#chat-body-container').find('.chat-message:last').removeClass('lastMessage');
               }, 15000);
+              scrollToElement('#chat-message-' + id);
             }, 100);
-            scrollToBottom();
           });
         }
       }
     });
+
+    function scrollToElement(element) {
+      if($(element) && $(element).offset()){
+        var top = $(element).offset().top + $('#chat-body-container').prop('scrollHeight');
+        //alert(top);
+        $('#chat-body-container').animate({
+          scrollTop: top
+        });
+      }
+    }
 
     vm.notMsg = function(user){
       var returnValue = true;

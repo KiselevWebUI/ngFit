@@ -43,6 +43,7 @@
         var lastUpdatedMessage = $firebaseObject(db.ref('options/lastUpdatedMessage/0'));
         lastUpdatedMessage.$loaded(function(){
           ++lastUpdatedMessage.count;
+          lastUpdatedMessage.id = newLength;
           lastUpdatedMessage.chat = message.chat;
           lastUpdatedMessage.from = message.from;
           lastUpdatedMessage.to = message.to;
