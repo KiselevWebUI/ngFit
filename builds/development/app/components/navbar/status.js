@@ -202,13 +202,14 @@
       var uid = $rootScope.currentUser.uid;
       Auth.logout(function(user, error){
         //console.log('user = ' + user + '\nuid = ' + uid);
-        fitfireService.setLogedNowUser(uid, false);
-        vm.updateUserData(user);
-        if($rootScope.curPath !== 'home'){
-          $location.path('/#');
-        }
-        $log.debug('status.js Logout ' + user);
-        $scope.$apply();
+        fitfireService.setLogedNowUser(uid, false, function(){
+          vm.updateUserData(user);
+          if($rootScope.curPath !== 'home'){
+            $location.path('/#');
+          }
+          $log.debug('status.js Logout ' + user);
+          //$scope.$apply();
+        });
       }).then(function(){});
     }
 

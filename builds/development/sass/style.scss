@@ -95,8 +95,8 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 }
 .chat-block{display: table; width: 100%; margin-bottom: 5px;}
 .chat-block .chat-users{display: table-cell; width: 0px;}
-.chat-block .chat-body{border: 2px solid $grey; height: 300px; overflow-y: scroll; overflow-x: hidden; position: relative;}
-.chat-block .chat-msg{width: 100%; height: 100px; resize: none; font-size: 13px;}
+.chat-block .chat-body{border: 2px solid $grey; min-height: 50px; max-height: 300px; overflow-y: scroll; overflow-x: hidden; position: relative;}
+.chat-block .chat-msg{width: 100%; height: 100px; resize: none; font-size: 13px; background: $lightgrey; border: 1px solid $grey; }
 .chat-message{
   border: 1px solid $bluegrey;
   padding: 5px 10px 5px 10px;
@@ -107,6 +107,12 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
   font-size: 13px;
   white-space: pre-wrap;
   position: relative;
+}
+.chat-message.lastMessage{
+  background-color: lighten($teal, 40);
+  -webkit-transition: background-color 1000ms linear;
+  -ms-transition: background-color 1000ms linear;
+  transition: background-color 1000ms linear;
 }
 .chat-message i{
   position: absolute;

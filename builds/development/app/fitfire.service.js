@@ -85,16 +85,19 @@
     }
 
     this.updateUser = function(_user){
-      var user = db.ref('users/' + _user.$id);
-      user.set({
-        name: _user.name,
-        age: _user.age,
-        uid: _user.uid,
-        owner:_user.owner,
-        msg: _user.msg,
-        logedNow: _user.logedNow
-      });
-      return $firebaseArray(user).$loaded();
+      console.log('_user', _user)
+      if(_user && _user.$id){
+        var user = db.ref('users/' + _user.$id);
+        user.set({
+          name: _user.name,
+          age: _user.age,
+          uid: _user.uid,
+          owner:_user.owner,
+          msg: _user.msg,
+          logedNow: _user.logedNow
+        });
+        return $firebaseArray(user).$loaded();
+      }
     }
 
     this.setLogedNowUser = function(uid, logedKey, cb){
@@ -109,11 +112,19 @@
           }
         }
         if(curr){
+          console.log('logedNow', logedNow, 'logedKey', logedKey);
           if(logedNow != logedKey){
             curr.logedNow = logedKey;
-            self.updateUser(curr).then(function(){
-              if(cb) cb(curr);
+            console.log('curr', curr);
+
+            var user = db.ref('users/' + curr.$id);
+            return $firebaseObject(user).$loaded(function(_user){
+              console.log('_user', _user)
+              _user.logedNow = logedKey;
+              _user.$save();
+              if(cb) cb(_user);
             });
+
           }else if(cb) cb(curr, true);
         }
       })

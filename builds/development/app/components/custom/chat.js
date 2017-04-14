@@ -82,22 +82,31 @@
         $log.debug(err);
       });
 
+    chatService.getLastUpdatedMessage()
+      .then(function(data){
+        vm.lastUpdatedMessage = data;
+      })
+
 
     vm.setCurrentChat = function(user){
       vm.currentChatUser = user;
+      //console.log('vm.currentChatUser', vm.currentChatUser);
       chatService.getChats()
         .then(function(data){
-          vm.currentChat = data;
+          //vm.currentChat = data;
           vm.currentChat = $filter('userInChat')(data, parseInt(user.$id), $rootScope.currentUser.$id);
+          //console.log(data, vm.currentChat);
           if(vm.currentChat[0] && vm.currentChat[0].$id){
             chatService.getMessagesForCurrentChat(parseInt(vm.currentChat[0].$id))
               .then(function(data){
                 vm.currentChatMessages = data;
                 vm.chatMessage = getEmptyMessaage(parseInt(vm.currentChat[0].$id), $rootScope.currentUser.$id, parseInt(user.$id));
+                //console.log('vm.currentChatMessages', vm.currentChatMessages);
+                //console.log('vm.chatMessage', vm.chatMessage);
                 chatService.resetUnreadedMessages(user.$id, $rootScope.currentUser.$id, function(){
 
                 });
-                setTimeout(function(){$('#chat-body-container').animate({scrollTop: 100000}, 1000);}, 100);
+                scrollToBottom();
               }).catch(function(err){
                 $scope.$apply(function(){
                   vm.save_error = err.msg;
@@ -108,8 +117,13 @@
             vm.currentChatMessages = [];
             var newChat = getEmptyChat($rootScope.currentUser.$id, parseInt(user.$id));
             chatService.addNewChat(newChat, function(chat, id){
-              vm.chatMessage = getEmptyMessaage(parseInt(id), $rootScope.currentUser.$id, parseInt(user.$id));
-              setTimeout(function(){$('#chat-body-container').animate({scrollTop: 100000}, 1000);}, 100);
+              chatService.getChats()
+              .then(function(data){
+                  vm.currentChat = $filter('userInChat')(data, parseInt(user.$id), $rootScope.currentUser.$id);
+                  //console.log(data, vm.currentChat);
+                  vm.chatMessage = getEmptyMessaage(parseInt(id), $rootScope.currentUser.$id, parseInt(user.$id));
+                  scrollToBottom();
+              });
             });
           }
         }).catch(function(err){
@@ -121,18 +135,62 @@
     }
 
     vm.sendMessage = function(){
+      //console.log(vm.chatMessage);
       chatService.addMessage(vm.chatMessage, function(message, id){
+        //console.log('vm.sendMessage', message, id)
         vm.chatMessage.text = '';
         chatService.updateUser(message.from, message.to)
         .then(function(user){
-            setTimeout(function(){$('#chat-body-container').animate({scrollTop: 100000}, 1000);}, 100);
-        });
+            if(!vm.currentChatMessages.length){
+              chatService.getMessagesForCurrentChat(parseInt(vm.currentChat[0].$id))
+                .then(function(data){
+                  vm.currentChatMessages = data;
+                  //console.log('vm.currentChatMessages', vm.currentChatMessages);
+                  scrollToBottom();
+                }).catch(function(err){
+                  $scope.$apply(function(){
+                    vm.save_error = err.msg;
+                  })
+                  $log.debug(err);
+                });
+            }else  scrollToBottom();
+          });
       })
     }
 
+    function scrollToBottom(){
+      setTimeout(function(){$('#chat-body-container').animate({scrollTop: 100000}, 1000);}, 100);
+    }
+
+    chatService.addWatchToLastUpdatedMessageObject().$watch(function(data){
+      $rootScope.$broadcast('ListMessageChanged');
+    });
+
+    $scope.$on('ListMessageChanged', function() {
+      //console.log('$on ListMessageChanged:', vm.lastUpdatedMessage);
+      if(vm.currentChat && vm.currentChatMessages){
+        var from = vm.lastUpdatedMessage.from;
+        var to = vm.lastUpdatedMessage.to;
+        //console.log('from', from, 'to', to);
+        $('#chat-body-container').find('.chat-message').removeClass('lastMessage');
+        if(to == $rootScope.currentUser.$id){
+          chatService.resetUnreadedMessages(from, $rootScope.currentUser.$id, function(){
+            setTimeout(function(){
+              $('#chat-body-container').find('.chat-message').removeClass('lastMessage');
+              $('#chat-body-container').find('.chat-message:last').addClass('lastMessage');
+              setTimeout(function(){
+                $('#chat-body-container').find('.chat-message:last').removeClass('lastMessage');
+              }, 15000);
+            }, 100);
+            scrollToBottom();
+          });
+        }
+      }
+    });
+
     vm.notMsg = function(user){
       var returnValue = true;
-      if(user.msg){
+      if($rootScope.currentUser && $rootScope.currentUser.$id && user.msg){
         for(var i in user.msg){
           if(($rootScope.currentUser.$id == parseInt(user.msg[i].to)) && (user.msg[i].count != 0)){
             returnValue = false;

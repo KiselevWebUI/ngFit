@@ -17,7 +17,7 @@
 
     var db = firebase.database();
 
-    this.addNewChat = function(chat){
+    this.addNewChat = function(chat, cb){
       var chatLength = $firebaseObject(db.ref('options/chatLength'));
       return chatLength.$loaded(function() {
         var newLength = ++chatLength.$value;
@@ -40,12 +40,24 @@
         messagesLength.$save();
         var messages = db.ref('messages');
         messages.child(newLength).set(message);
+        var lastUpdatedMessage = $firebaseObject(db.ref('options/lastUpdatedMessage/0'));
+        lastUpdatedMessage.$loaded(function(){
+          ++lastUpdatedMessage.count;
+          lastUpdatedMessage.chat = message.chat;
+          lastUpdatedMessage.from = message.from;
+          lastUpdatedMessage.to = message.to;
+          lastUpdatedMessage.$save();
+        });
         if(cb) cb(message, newLength);
       });
     }
 
     this.getMessage = function(message){
       return $firebaseObject(db.ref('messages/' + message.$id)).$loaded();
+    }
+
+    this.getLastUpdatedMessage = function(message){
+      return $firebaseObject(db.ref('options/lastUpdatedMessage/0')).$loaded();
     }
 
     this.saveMessage = function(message){
@@ -62,6 +74,10 @@
 
     this.addWatchToMessagesListObject = function(){
       return $firebaseObject(db.ref('messages'));
+    }
+
+    this.addWatchToLastUpdatedMessageObject = function(){
+      return $firebaseObject(db.ref('options/lastUpdatedMessage/0'));
     }
 
     this.getMessages = function(){
@@ -96,8 +112,10 @@
     this.resetUnreadedMessages = function(id, myId, cb){
       var user = db.ref('users/' + id);
       return $firebaseObject(user).$loaded(function(user_){
-        user_.msg['' + myId].count = 0;
-        user_.$save();
+        if(user_.msg['' + myId]){
+          user_.msg['' + myId].count = 0;
+          user_.$save();
+        }
         if(cb) cb(user_);
       });
     }
