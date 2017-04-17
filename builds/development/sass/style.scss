@@ -97,17 +97,39 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 .chat-block .chat-users{display: table-cell; width: 0px;}
 .chat-block .chat-body{border: 2px solid $grey; min-height: 50px; max-height: 300px; overflow-y: scroll; overflow-x: hidden; position: relative;}
 .chat-block .chat-msg{width: 100%; height: 100px; resize: none; font-size: 13px; background: $lightgrey; border: 1px solid $grey; }
+/*.chat-message-outer-self{text-align: right;}*/
 .chat-message{
   border: 1px solid $bluegrey;
   padding: 5px 10px 5px 10px;
   display: block;
   border-radius: 5px;
   background: #f0f4f8;
-  margin: 10px 50px 10px 20px;
+  margin: 5px 50px 5px 10px;
   font-size: 13px;
   white-space: pre-wrap;
   position: relative;
 }
+.chat-message .del-msg{
+  position: absolute;
+  display: block;
+  right: 0px;
+  top: 0px;
+  color: #000;
+  font-size: 21px;
+  font-weight: bold;
+  line-height: 1em;
+  opacity: 0.0;
+  text-shadow: 0 1px 0 #fff;
+  text-decoration: none;
+  cursor: pointer;
+  height: 23px;
+  width: 23px;
+  //border: 1px solid $bluegrey;
+  //background: $white;
+  //border-radius: 23px;
+  text-align: center;
+}
+.chat-message:hover .del-msg{opacity: 0.8; transition: opacity 3s}
 .chat-message.lastMessage{
   background-color: lighten($teal, 40);
   -webkit-transition: background-color 1000ms linear;
@@ -127,12 +149,15 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 }
 .chat-message-self{
   background: #c7edfc;
-  margin: 10px 20px 10px 50px;
+  margin: 5px 10px 5px 50px;
 }
 .chat-message-self i{
   right: -8px;
   left: auto;
 }
+.for-delete{background: $deeporange; color: $white;}
+.for-edit{background: $orange; color: $white;}
+.message-changed{position:absolute; right: 4px; bottom: 0px; font-size: 12px;}
 ////////////////////////////////////////
 
 ////////////////////////////////////////

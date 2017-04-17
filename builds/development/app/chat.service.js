@@ -61,16 +61,32 @@
       return $firebaseObject(db.ref('options/lastUpdatedMessage/0')).$loaded();
     }
 
-    this.saveMessage = function(message){
-      var message = db.ref('messages/' + message.$id);
-      message.$save();
-      return $firebaseObject(message).$loaded();
+    this.saveMessage = function(forEditMessage, chatMessage, cb){
+      var message = db.ref('messages/' + forEditMessage.$id);
+      return $firebaseObject(message).$loaded(function(message_){
+        //console.log('message_', message, message_);
+        message_.text = chatMessage.text;
+        var changed = message_.changed?parseInt(message_.changed):0;
+        message_.changed = ++changed;
+        message_.$save();
+        if(cb) cb(message_);
+      });
     }
 
     this.deleteMessage = function(message){
       var message = db.ref('messages/' + message.$id);
       message.$remove();
       return $firebaseObject(message).$loaded();
+    }
+
+    this.deleteMessages = function(MessagesForDelete){
+      var messages = db.ref('messages');
+      var updates = {};
+      for(var i in MessagesForDelete){
+        updates['/' + i] = null;
+      }
+      //console.log('updates', updates);
+      return messages.update(updates);
     }
 
     this.addWatchToMessagesListObject = function(){

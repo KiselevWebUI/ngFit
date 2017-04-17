@@ -50,6 +50,10 @@
     vm.currentChat = null;
     vm.currentChatUser = null;
     vm.currentChatMessages = null;
+    vm.forDeleteMessages = {};
+    vm.deleteMessagesCount = 0;
+
+    vm.forEditMessages = null;
 
     function getEmptyChat(from, to){
       return {
@@ -74,7 +78,7 @@
           if(user.uid === $rootScope.currentUser.uid){
             $rootScope.currentUser.$id = parseInt(user.$id);
           }
-        })
+        });
       }).catch(function(err){
         $scope.$apply(function(){
           vm.save_error = err.msg;
@@ -132,6 +136,72 @@
           })
           $log.debug(err);
         });
+    }
+
+    vm.delMessage = function($event, message){
+      $event.preventDefault();
+      $event.stopPropagation();
+      if(!vm.forDeleteMessages[message.$id]){
+        vm.forDeleteMessages[message.$id] = message;
+        vm.deleteMessagesCount++;
+        if(vm.forEditMessages[message.$id]){
+          vm.forEditMessages = null;
+          vm.chatMessage = null;
+        }
+      }else{
+        delete vm.forDeleteMessages[message.$id];
+        vm.deleteMessagesCount--;
+      }
+      //console.log('vm.delMessage', message, vm.forDeleteMessages);
+    }
+
+    vm.deleteMessages = function(){
+      chatService.deleteMessages(vm.forDeleteMessages)
+        .then(function(data){
+          //console.log('data', data);
+          $scope.$apply(function(){
+            vm.forDeleteMessages = {};
+            vm.deleteMessagesCount = 0;
+          })
+          //console.log('vm.deleteMessagesCount', vm.deleteMessagesCount);
+        })
+        .catch(function(err){
+          $scope.$apply(function(){
+            vm.save_error = err.msg;
+          })
+          $log.debug(err);
+        });
+    }
+
+    vm.editMessage = function($event, message, possible){
+      if(possible){
+        vm.chatMessage = message;
+        vm.forEditMessages = message;
+        //console.log('vm.editMessage', message);
+        if(vm.forDeleteMessages[message.$id]){
+          delete vm.forDeleteMessages[message.$id];
+          vm.deleteMessagesCount--;
+        }
+      }
+      else{
+        vm.chatMessage = null;
+        vm.forEditMessages = null;
+      }
+    }
+
+    vm.saveMessage = function(){
+      chatService.saveMessage(vm.forEditMessages, vm.chatMessage, function(message){
+        vm.chatMessage = null;
+        vm.forEditMessages = null;
+      })
+      .then(function(){
+      })
+      .catch(function(err){
+        $scope.$apply(function(){
+          vm.save_error = err.msg;
+        })
+        $log.debug(err);
+      });
     }
 
     vm.sendMessage = function(){
@@ -223,6 +293,8 @@
       vm.currentChat = null;
       vm.currentChatUser = null;
       vm.currentChatMessages = null;
+      vm.deleteMessages = {};
+      vm.deleteMessagesCount = 0;
     }
   }
 
