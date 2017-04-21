@@ -39,6 +39,7 @@
         var newLength = ++messagesLength.$value;
         messagesLength.$save();
         var messages = db.ref('messages');
+        message.updateTs = firebase.database.ServerValue.TIMESTAMP;
         messages.child(newLength).set(message);
         var lastUpdatedMessage = $firebaseObject(db.ref('options/lastUpdatedMessage/0'));
         lastUpdatedMessage.$loaded(function(){
@@ -68,6 +69,7 @@
         message_.text = chatMessage.text;
         var changed = message_.changed?parseInt(message_.changed):0;
         message_.changed = ++changed;
+        message_.updateTs = firebase.database.ServerValue.TIMESTAMP;
         message_.$save();
         if(cb) cb(message_);
       });

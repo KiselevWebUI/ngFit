@@ -1,7 +1,7 @@
 ;(function(){
   'use strict';
 
-  angular.module('ngFit.users', ['ngFit.fitfire.service', 'ngFit.chat'])
+  angular.module('ngFit.users', ['ngFit.fitfire.service', 'infinite-scroll', 'ngFit.chat'])
     .directive('usersBlock', function(){
       return {
         restrict: 'E',
@@ -81,6 +81,37 @@
     vm.userForm = false;
 
     vm.dbUrl = firebaseConfig.databaseURL;
+
+
+
+
+    vm.usersList = [];
+    vm.loadMoreUsersWork = false;
+    vm.userMoreLoadLimit = 6;
+    vm.userMoreLoadStart = '0';
+    vm.userMoreLoadNonStop = true;
+    vm.userMoreLoadHasMore = true;
+
+    vm.loadMoreUsers = function(loadMoreBtn){
+      if(vm.loadMoreUsersWork) return;
+      vm.loadMoreUsersWork = true;
+      $('#' + loadMoreBtn).button('loading');
+      currentProvider.getJSONData(vm.userMoreLoadStart, vm.userMoreLoadLimit).then(function(data){
+        vm.usersList = vm.usersList.concat(data);
+        $('#' + loadMoreBtn).button('reset');
+        vm.loadMoreUsersWork = false;
+        vm.userMoreLoadStart = '' + (parseInt(vm.userMoreLoadStart) + data.length);
+        if(data.length ===  0){
+          if(vm.userMoreLoadNonStop) vm.userMoreLoadStart = '0';
+          else vm.userMoreLoadHasMore = false;
+        }
+      })
+    }
+
+    vm.flexBodyScroll = function($event){
+      console.log($event)
+    }
+
 
     vm.user = {};
     vm.users = null;

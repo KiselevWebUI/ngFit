@@ -11,7 +11,6 @@
     <pre style="max-height: 500px; overflow-y: auto;">{{currentUser | json}}</pre>
   </div>
 </div>-->
-
 <div class="panel panel-default like-table-header">
   <div class="panel-body">
     <h3>Like table view ({{ vm.users.length }})</h3>
@@ -57,6 +56,31 @@
     <div class="block-content"><h4 style="margin-top: 0">{{ user.name }}</h4></div>
     <div>id:{{ user.$id }}, age: {{ user.age }}</div>
   </div>
+</div>
+
+
+<div class="panel panel-default like-table-header">
+  <div class="panel-body">
+    <h3>With infinity scroll ({{ vm.usersList.length }})</h3>
+  </div>
+</div>
+
+<div class="like-table" infinite-scroll="vm.loadMoreUsers('loadMoreBtn')">
+  <div class="like-table-td" ng-repeat-start="user in vm.usersList">
+    <div class="like-table-td-inner" ng-mouseenter="user.over=1" ng-mouseleave="user.over=0" ng-class="{'block-over': user.over == 1}">
+      <div class="block-content like-table-row">
+        <div style="display: table-cell; height: 100%">
+          <h4 style="margin: 0;">({{ user.index + 1 }}) {{ user.name }}</h4>
+          <p class="list-group-item-text">Eyes: {{ user.eyeColor }}</p>
+        </div>
+      </div>
+      <div class="like-table-row">Balance: {{ user.balance }}</div>
+    </div>
+  </div>
+  <div class="like-table-br" ng-repeat-end=""></div>
+</div>
+<div class="text-center" ng-show="vm.userMoreLoadHasMore">
+  <button class="btn btn-primary" id="loadMoreBtn" ng-click="vm.loadMoreUsers('loadMoreBtn')" data-loading-text="<i class='glyphicon glyphicon-refresh gly-spin'></i> Processing Load">Load More</button>
 </div>
 
 <div ng-include="'init.html'"></div>

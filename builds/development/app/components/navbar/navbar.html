@@ -12,7 +12,7 @@
           <li><a data-toggle="modal" data-target="#sign-in-modal" href="javascript:void(0)" ng-hide="ac.userData">Sign In</a></li>
           <li>
             <a data-toggle="modal" data-target="#logged-user-modal" href="javascript:void(0)">
-              <span class="logged-user-name">{{ac.userData.userName}}</span>
+              <div class="logged-user-name elipsis" style="max-width: 150px; display: inline-block; position: relative; top: 5px;">{{ac.userData.userName}}</div>
               <img src="{{ac.userData.userPhoto}}" ng-cloak ng-show="ac.userData.userPhoto" class="logged-user-photo" style="max-width: 40px;"/>
             </a>
           </li>
@@ -31,7 +31,7 @@
         <ul class="nav navbar-nav navbar-right" id="loggend-user-data-md">
           <li><a data-toggle="modal" data-target="#sign-in-modal" href="javascript:void(0)" ng-hide="ac.userData">Sign In</a></li>
           <li ng-show="ac.userData" style="white-space: nowrap">
-            <a data-toggle="modal" data-target="#logged-user-modal" href="javascript:void(0)">
+            <a data-toggle="modal" data-target="#logged-user-modal" href="javascript:void(0)" class="elipsis">
               <img src="{{ac.userData.userPhoto}}" ng-cloak ng-show="ac.userData.userPhoto" class="logged-user-photo" style="max-width: 50px;"/>
               {{ac.userData.userName}}
             </a>

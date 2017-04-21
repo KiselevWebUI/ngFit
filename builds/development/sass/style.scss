@@ -87,6 +87,92 @@ table.jumbotron{border-radius:4px !important; overflow: hidden;}
 .copy, .copy:hover{background: none !important; color: $grey;}
 .copy span{position: relative; top: 2px;}
 
+#loggend-user-data-md a{
+  max-width: 250px;
+}
+
+.elipsis{white-space: nowrap; text-overflow: ellipsis; overflow: hidden;}
+.word-break-wrap{
+  overflow-wrap: break-word;  /* не поддерживает IE, Firefox; является копией word-wrap */
+  word-wrap: break-word;
+  word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */
+  line-break: loose;  /* нет поддержки для русского языка */
+  -webkit-hyphens: none; -ms-hyphens: none; hyphens: none;  /* значение auto не поддерживается Chrome */
+  width: 100%;
+}
+
+//////////////////////////////////////////////
+.flex-grid{
+  position: relative;
+  z-index: 10000;
+  width: 100%;
+  top: 0;
+  background: #fff;
+  border: 1px solid #808080;
+  overflow: hidden;
+}
+.flex-row{
+  display: flex;
+}
+.flex-grid .flex-row:nth-child(2n) > div{
+  background: #f6f6f6;
+}
+.flex-row > div {
+  border-right: 1px dotted #808080;
+  flex: 1 1 auto;
+  width: 40px;
+  transition: width 0.7s ease-out;
+  padding: 5px;
+  margin: 0px;
+}
+.flex-grid-ellipsis .flex-row > div, div.word-ellipsis{
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+.flex-grid-wrap .flex-row > div, div.word-wrap{
+  overflow-wrap: break-word;  /* не поддерживает IE, Firefox; является копией word-wrap */
+  word-wrap: break-word;
+  word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */
+  line-break: loose;  /* нет поддержки для русского языка */
+  -webkit-hyphens: none; -ms-hyphens: none; hyphens: none;  /* значение auto не поддерживается Chrome */
+}
+.flex-header > div.scrollbar{ flex: 0 0 17px; border-right: none; padding: 0 !important;}
+@media screen and (-ms-high-contrast: active), (-ms-high-contrast: none) {
+  .flex-header > div.last{ flex: 0 0 6px;}
+}
+.flex-header > div.id, .flex-row > div.id{flex: 0 0 40px; width: 40px !important; min-width: 40px !important; max-width: 40px !important};
+
+.flex-row > div:nth-child(1){ min-width: 40px; max-width: 40px }
+.flex-row > div:nth-child(2){ min-width: 100px; max-width: 300px }
+/*.flex-row > div:nth-child(3){ min-width: 100px; max-width: 300px }
+.flex-row > div:nth-child(4){ min-width: 100px; max-width: 300px }
+.flex-row > div:nth-child(5){ min-width: 100px; max-width: 300px }
+.flex-row > div:nth-child(6){ min-width: 100px; max-width: 300px }*/
+
+.flex-header {
+  display: flex;
+  color: #000;
+  font-weight: normal;
+}
+.flex-header > div{
+  text-align: center;
+  background: rgba(0, 0, 0, 0) linear-gradient(#fff, #d3d3d3) repeat scroll 0 0;
+  border-bottom: 1px solid #808080;
+  padding: 2px;
+  border-right: 1px solid #808080;
+}
+.flex-body{
+  height: 200px;
+  overflow-y: scroll;
+}
+
+#flex-grid-users .flex-row > div:nth-child(2){ flex: 2 1 auto; min-width: 100px; }
+#flex-grid-users .flex-row > div:nth-child(3){ min-width: 80px; }
+#flex-grid-users .flex-row > div:nth-child(4){ min-width: 80px; }
+//////////////////////////////////////////////
+
+
 /////////////////////////////////////////
 a.badge{outline: none; font-weight: normal; background: #009688;}
 .user-self .badge, .user-self .badge:visited, .user-self .badge:active, .user-self .badge:hover {
@@ -97,14 +183,14 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 .chat-block .chat-users{display: table-cell; width: 0px;}
 .chat-block .chat-body{border: 2px solid $grey; min-height: 50px; max-height: 300px; overflow-y: scroll; overflow-x: hidden; position: relative;}
 .chat-block .chat-msg{width: 100%; height: 100px; resize: none; font-size: 13px; background: $lightgrey; border: 1px solid $grey; }
-/*.chat-message-outer-self{text-align: right;}*/
+.chat-message-outer{position: relative;}
 .chat-message{
   border: 1px solid $bluegrey;
   padding: 5px 10px 5px 10px;
   display: block;
   border-radius: 5px;
   background: #f0f4f8;
-  margin: 5px 50px 5px 10px;
+  margin: 5px 65px 5px 10px;
   font-size: 13px;
   white-space: pre-wrap;
   position: relative;
@@ -124,9 +210,6 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
   cursor: pointer;
   height: 23px;
   width: 23px;
-  //border: 1px solid $bluegrey;
-  //background: $white;
-  //border-radius: 23px;
   text-align: center;
 }
 .chat-message:hover .del-msg{opacity: 0.8; transition: opacity 3s}
@@ -149,7 +232,7 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 }
 .chat-message-self{
   background: #c7edfc;
-  margin: 5px 10px 5px 50px;
+  margin: 5px 10px 5px 65px;
 }
 .chat-message-self i{
   right: -8px;
@@ -157,7 +240,10 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 }
 .for-delete{background: $deeporange; color: $white;}
 .for-edit{background: $orange; color: $white;}
-.message-changed{position:absolute; right: 4px; bottom: 0px; font-size: 12px;}
+.message-changed{position:absolute; right: 4px; bottom: 0px; font-size: 10px; color: #000;}
+.message-changed b{position: relative; font-size: 14px; top: -2px;}
+.message-date-time{position: absolute; top: 3px; right: 5px; font-size: 10px; white-space: pre-wrap; line-height: 1.1em;/* padding: 2px; border-radius: 3px; background: #f0f4f8;*/}
+.chat-message-outer-self .message-date-time{left: 5px; right: auto; text-align: right;/* background: #c7edfc;*/}
 ////////////////////////////////////////
 
 ////////////////////////////////////////
@@ -342,14 +428,16 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
 
 @media (max-width: $screen-phone) {
   #loggend-user-data-sm .logged-user-name{
-    display: none;
+    display: none !important;
   }
   #loggend-user-data-md a{
     text-align: right;
+    max-width: inherit !important;
   }
   #loggend-user-data-md .logged-user-photo{
-    display: none;
+    display: none !important;
   }
+  pre{display: none}
   //.navbar-brand{border: 1px solid white !important;}
 }
 
@@ -366,6 +454,7 @@ a.badge{outline: none; font-weight: normal; background: #009688;}
   .footer-menu li a{padding: 5px 5px; text-align: center;}
   .infinity-scroll .container{border-right: none;}
   .affix-stop .affix-block{width: 347px; padding-bottom: 5px;}
+  pre{display: none}
 }
 
 @media (min-width: $screen-tablet) {

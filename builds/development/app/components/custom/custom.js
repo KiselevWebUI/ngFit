@@ -3,6 +3,28 @@
 
   var custom = angular.module('ngFit.custom', ['ngFit.auth.firebase']);
 
+  custom.directive('flexBodyScroll', ['$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log){
+    return {
+      restrict: 'A',
+      scope:{flexBodyScroll: '&'},
+      link: function(scope, element, attrs){
+        //console.log('flexBodyScroll');
+
+        scope.height = $(element).height();
+        scope.header = $(element).prev().css('position', 'relative');
+
+        element.bind('scroll', function(e){
+          //console.debug($(element)[0].scrollLeft, $(element)[0].scrollWidth, $(element).width());
+          if($(element)[0].scrollTop + scope.height + 10 >= $(element)[0].scrollHeight){
+            //console.log(attrs.flexBodyScroll);
+            scope.flexBodyScroll();
+          }
+          scope.header.css('left', -$(element)[0].scrollLeft);
+        })
+      }
+    }
+  }]);
+
   custom.directive('likeTable', ['$rootScope', '$window', '$timeout', '$log', function($rootScope, $window, $timeout, $log){
     return {
       restrict: 'C',
@@ -82,21 +104,21 @@
       controllerAs: 'custUplCtrl',
       bindToController: true,
       template:/* @ngInject */
-        `<div class="upload-file-component" style="position: relative;">
-          <input type="file" ng-model="custUplCtrl.files" custom-on-change handler="custUplCtrl.handlerChange(files)"/>
-          <div class="input-group" style="width: 100%;">
-            <input readonly="" class="form-control" ng-model="custUplCtrl.fileName" placeholder="User photo" type="text"/>
-            <span class="input-group-btn input-group-sm" ng-class="{'notEmptyFile': custUplCtrl.notEmptyFile}" ng-hide="custUplCtrl.afterUpload">
-              <button type="button" class="btn btn-fab btn-fab-mini" title="Upload">
-                <i class="glyphicon glyphicon-paperclip" aria-hidden="true"></i>
-              </button>
-            </span>
-          </div>
-          <div class="progress" ng-show="custUplCtrl.progress > 0">
-            <div class="progress-bar progress-bar-info" ng-style="{width: custUplCtrl.getProgress()}"></div>
-          </div>
-        </div>
-        <div ng-show="custUplCtrl.upload_error" class="alert alert-danger" style="margin: 5px 0 0 0">Error! {{custUplCtrl.upload_error.message}}</div>`
+        '<div class="upload-file-component" style="position: relative;">'+
+          '<input type="file" ng-model="custUplCtrl.files" custom-on-change handler="custUplCtrl.handlerChange(files)"/>'+
+          '<div class="input-group" style="width: 100%;">'+
+            '<input readonly="" class="form-control" ng-model="custUplCtrl.fileName" placeholder="User photo" type="text"/>'+
+            '<span class="input-group-btn input-group-sm" ng-class="{\'notEmptyFile\': custUplCtrl.notEmptyFile}" ng-hide="custUplCtrl.afterUpload">'+
+              '<button type="button" class="btn btn-fab btn-fab-mini" title="Upload">'+
+                '<i class="glyphicon glyphicon-paperclip" aria-hidden="true"></i>'+
+              '</button>'+
+            '</span>'+
+          '</div>'+
+          '<div class="progress" ng-show="custUplCtrl.progress > 0">'+
+            '<div class="progress-bar progress-bar-info" ng-style="{width: custUplCtrl.getProgress()}"></div>'+
+          '</div>'+
+        '</div>'+
+        '<div ng-show="custUplCtrl.upload_error" class="alert alert-danger" style="margin: 5px 0 0 0">Error! {{custUplCtrl.upload_error.message}}</div>'
     }
   }
 
@@ -146,18 +168,18 @@
       controllerAs: 'custPgnCtrl',
       bindToController: true,
       template:/* @ngInject */
-        `<div>
-          <div class="jumbotron ipp-block" style="margin-top: 10px !important;">
-            <span style="line-height: 28px; padding-right: 5px;">Total in list: {{custPgnCtrl.totalItems}}</span>
-          </div>
-          <ul class="pagination custom-pagination" ng-show="custPgnCtrl.allPages.length > 1">
-            <li ng-class="{'disabled': custPgnCtrl.currentPage == 0}"><a href="javascript:void(0)" ng-click="custPgnCtrl.prevPage()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a></li>
-            <li ng-show="custPgnCtrl.currentPage > 2"><span>...</span></li>
-            <li ng-show="n > custPgnCtrl.currentPage - 3 && n < custPgnCtrl.currentPage + 3" ng-class="{'active': custPgnCtrl.currentPage == n}" ng-repeat="n in custPgnCtrl.allPages"><a href="javascript:void(0)" ng-click="custPgnCtrl.setCurrentPage(n)">{{n+1}}</a></li>
-            <li ng-show="custPgnCtrl.currentPage < custPgnCtrl.allPages.length - 3"><span>...</span></li>
-            <li ng-class="{'disabled': custPgnCtrl.currentPage == custPgnCtrl.allPages.length - 1}"><a href="javascript:void(0)" ng-click="custPgnCtrl.nextPage()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>
-          </ul>
-        </div>`
+        '<div>'+
+          '<div class="jumbotron ipp-block" style="margin-top: 10px !important;">'+
+            '<span style="line-height: 28px; padding-right: 5px;">Total in list: {{custPgnCtrl.totalItems}}</span>'+
+          '</div>'+
+          '<ul class="pagination custom-pagination" ng-show="custPgnCtrl.allPages.length > 1">'+
+            '<li ng-class="{\'disabled\': custPgnCtrl.currentPage == 0}"><a href="javascript:void(0)" ng-click="custPgnCtrl.prevPage()"><span class="glyphicon glyphicon-chevron-left" aria-hidden="true"></span></a></li>'+
+            '<li ng-show="custPgnCtrl.currentPage > 2"><span>...</span></li>'+
+            '<li ng-show="n > custPgnCtrl.currentPage - 3 && n < custPgnCtrl.currentPage + 3" ng-class="{\'active\': custPgnCtrl.currentPage == n}" ng-repeat="n in custPgnCtrl.allPages"><a href="javascript:void(0)" ng-click="custPgnCtrl.setCurrentPage(n)">{{n+1}}</a></li>'+
+            '<li ng-show="custPgnCtrl.currentPage < custPgnCtrl.allPages.length - 3"><span>...</span></li>'+
+            '<li ng-class="{\'disabled\': custPgnCtrl.currentPage == custPgnCtrl.allPages.length - 1}"><a href="javascript:void(0)" ng-click="custPgnCtrl.nextPage()"><span class="glyphicon glyphicon-chevron-right" aria-hidden="true"></span></a></li>'+
+          '</ul>'+
+        '</div>'
     }
   }
 
@@ -225,9 +247,9 @@
       /*controllerAs: 'custArrCtrl',
       bindToController: true,*/
       template:/* @ngInject */
-        `<span ng-show="sortBy==name && !sortTo" class="glyphicon glyphicon-sort-by-attributes red" aria-hidden="true"></span>
-         <span ng-show="sortBy==name && sortTo" class="glyphicon glyphicon-sort-by-attributes-alt red" aria-hidden="true"></span>
-         <span ng-show="sortBy!=name" class="glyphicon glyphicon-sort" aria-hidden="true"></span>`
+        '<span ng-show="sortBy==name && !sortTo" class="glyphicon glyphicon-sort-by-attributes red" aria-hidden="true"></span>'+
+         '<span ng-show="sortBy==name && sortTo" class="glyphicon glyphicon-sort-by-attributes-alt red" aria-hidden="true"></span>'+
+         '<span ng-show="sortBy!=name" class="glyphicon glyphicon-sort" aria-hidden="true"></span>'
     }
   }
   ////// .directive('customArrows', customArrows); ////////
@@ -247,16 +269,16 @@
         scope.$watch(element.find('option'), function(){
           var options = '';
           element.find('option').each(function(){
-            options += `<li ng-class="{'selected': ngModel.id == '` + $(this).attr('value') + `'}"><a href="javascript:void(0)" ng-click="setSelected('` + $(this).attr('value') + `', '` + $(this).html() + `')">` + $(this).html() + `</a></li>`;
+            options += '<li ng-class="{\'selected\': ngModel.id == \'' + $(this).attr('value') + '\'}"><a href="javascript:void(0)" ng-click="setSelected(\'' + $(this).attr('value') + '\', \'' + $(this).html() + '\')">' + $(this).html() + '</a></li>';
           });
-          var str = `<div class="dropdown dropdown-custom">
-          <button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span ng-bind="ngModel.name"></span>
-            <span class="caret"></span>
-          </button>
-          <ul class="dropdown-menu dropdown-menu-custom">`;
+          var str = '<div class="dropdown dropdown-custom">'+
+          '<button class="btn btn-primary dropdown-toggle" type="button" data-toggle="dropdown"><span ng-bind="ngModel.name"></span>'+
+            '<span class="caret"></span>'+
+          '</button>'+
+          '<ul class="dropdown-menu dropdown-menu-custom">';
           str += options;
-          str += `</ul>
-          </div>`;
+          str += '</ul>'+
+          '</div>';
           //str += `<div>External: {{ external }}</div>`;
           scope.newElement = angular.element(str);
           element.before(scope.newElement);
@@ -327,12 +349,12 @@
     return{
       restrict: 'E',
       scope: {ngModel: '=', list: '=', inLineValue: '@', name: '@', controlClass: '@', style: '@', handler: '&'},
-      template: `<div style="position: relative; {{style}}">
-                  <input type="text" name="{{name}}" id="{{name}}" ng-model="ngModel" class="{{controlClass}}" style="width: 100%; position: relative; z-index: 11;" ng-keyup="keyUpEvent()"/>
-                  <div class="autocomplete-list" ng-show="list.length">
-                    <a ng-repeat="item in list" ng-click="setValue(item)" style="white-space: nowrap; display: block;">{{ item[inLineValue] }}</a>
-                  </div>
-                 </div>`,
+      template: '<div style="position: relative; {{style}}">'+
+                  '<input type="text" name="{{name}}" id="{{name}}" ng-model="ngModel" class="{{controlClass}}" style="width: 100%; position: relative; z-index: 11;" ng-keyup="keyUpEvent()"/>'+
+                  '<div class="autocomplete-list" ng-show="list.length">'+
+                    '<a ng-repeat="item in list" ng-click="setValue(item)" style="white-space: nowrap; display: block;">{{ item[inLineValue] }}</a>'+
+                  '</div>'+
+                 '</div>',
       controller: function($scope){
         $scope.setValue = function(item){
           $scope.ngModel = item[$scope.inLineValue];

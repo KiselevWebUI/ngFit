@@ -20,7 +20,7 @@
   content: "";
   display: table-cell;
   vertical-align: top;
-  height: 1%;
+  height: 10px;
   border-left: $base-cellspacing solid transparent;
   border-bottom: $base-cellspacing solid transparent;
 }
@@ -34,6 +34,14 @@
   border: 1px solid $grey;
   border-radius: 4px;
   box-shadow: none;
+}
+.like-table-row{
+  overflow-wrap: break-word;  /* не поддерживает IE, Firefox; является копией word-wrap */
+  word-wrap: break-word;
+  word-break: break-all;  /* не поддерживает Opera12.14, значение keep-all не поддерживается IE, Chrome */
+  line-break: loose;  /* нет поддержки для русского языка */
+  -webkit-hyphens: none; -ms-hyphens: none; hyphens: none;  /* значение auto не поддерживается Chrome */
+  width: 100%;
 }
 .like-table-td .logedNow{
   color: red;

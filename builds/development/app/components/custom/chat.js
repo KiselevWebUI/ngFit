@@ -144,7 +144,7 @@
       if(!vm.forDeleteMessages[message.$id]){
         vm.forDeleteMessages[message.$id] = message;
         vm.deleteMessagesCount++;
-        if(vm.forEditMessages[message.$id]){
+        if(vm.forEditMessages.$id == message.$id){
           vm.forEditMessages = null;
           vm.chatMessage = null;
         }
@@ -268,6 +268,25 @@
           scrollTop: top
         });
       }
+    }
+
+    vm.getMessageDate = function(ts){
+      if(ts){
+        var date = new Date(ts);
+        var month = date.getMonth() + 1;
+        month = month<10?'0'+month:month;
+        var day = date.getDate();
+        day = day<10?'0'+day:day;
+        var year = date.getFullYear();
+        var hour = date.getHours();
+        hour = hour<10?'0'+hour:hour;
+        var minute = date.getMinutes();
+        minute = minute<10?'0'+minute:minute;
+        var seconds = date.getSeconds();
+        seconds = seconds<10?'0'+seconds:seconds;
+        var str = day + "/" + month + "/" + year + '\n' + hour + ":" + minute + ":" + seconds;
+        return str;
+      }else return '1111';
     }
 
     vm.notMsg = function(user){
